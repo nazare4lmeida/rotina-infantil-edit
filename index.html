@@ -12,7 +12,8 @@
         font-family: "Open Sans", sans-serif;
         background-color: #e0f7fa;
         margin: 0;
-        padding: 20px;
+        /* Aumentei o espaço em baixo para o scroll ficar confortável */
+        padding: 40px 20px 60px 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -21,58 +22,58 @@
         position: relative;
       }
 
-      /* --- DECORAÇÃO DE FUNDO (Imagens Espalhadas) --- */
+      /* --- DECORAÇÃO DE FUNDO (AGORA NO FLUXO DA PÁGINA) --- */
       .bg-decor {
-        position: absolute;
-        z-index: 0; /* Fica atrás de tudo */
-        opacity: 0.9; /* Meio transparente para não atrapalhar */
-        width: 200px;
+        /* MUDANÇA PRINCIPAL: De absolute para relative */
+        position: relative; 
+        z-index: 0;
+        opacity: 1; /* Deixei totalmente visível já que não vai sobrepor texto */
+        width: 250px; /* Aumentei um pouquinho para ficar bonito no final */
+        margin-top: 50px; /* Espaço entre o botão e o Mario */
         animation: shimmer 4s linear infinite;
+        display: block;
       }
 
-      /* Posicionamento das imagens */
       .decor-1 {
-        bottom: 20px;
-        transform: rotate(15deg);
-        center: 10px;
-        --rot: 5deg;
+        /* Removemos 'bottom' e 'center' pois agora ele segue a ordem da página */
+        transform: rotate(0deg); /* Deixei mais reto para ficar bonito no rodapé */
         animation: float 6s ease-in-out infinite;
       }
 
       @media (max-width: 600px) {
         .bg-decor {
-          width: 100px;
-          opacity: 0.2;
-        } /* Menor no celular */
+          width: 180px;
+        }
       }
 
       /* --- TÍTULO E DATA --- */
       h1 {
         font-family: "Fredoka One", cursive;
         color: #030a5ad8;
-        font-size: 4rem;
+        font-size: 3.5rem; /* Ajustei levemente para não quebrar em telas pequenas */
         text-shadow: 4px 4px 0px #4a9eee;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         text-align: center;
         padding: 0 5px;
-        margin-top: 20px;
         z-index: 1;
+        line-height: 1.2;
       }
 
       #date-display {
         font-family: "Fredoka One", cursive;
         color: #034f7a;
-        font-size: 2.5rem;
-        margin-bottom: 40px;
+        font-size: 2rem;
+        margin-bottom: 50px; /* Mais espaço antes do relógio */
         background: rgba(255, 255, 255, 0.8);
-        padding: 10px 20px;
+        padding: 10px 30px;
         border-radius: 30px;
+        text-align: center;
       }
 
       /* --- RELÓGIO MOEDA --- */
       #clock {
         font-family: "Fredoka One", cursive;
-        font-size: 4rem; /* Ajustado para caber "Play" */
+        font-size: 4rem;
         color: #795548;
         width: 260px;
         height: 260px;
@@ -84,10 +85,11 @@
         border: 12px solid #ffb300;
         box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.8),
           0 10px 25px rgba(0, 0, 0, 0.3);
-        margin-bottom: 30px;
+        margin-bottom: 40px;
         position: relative;
         overflow: hidden;
         z-index: 1;
+        flex-shrink: 0; /* Garante que o relógio não amasse */
       }
 
       #clock::after {
@@ -121,24 +123,25 @@
       #start-btn {
         background: #be0909;
         color: white;
-        padding: 20px 50px;
+        padding: 20px 60px;
         font-size: 1.8rem;
-        border-radius: 30px;
+        border-radius: 40px;
         box-shadow: 0 8px 0 #be301e;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
       }
 
       #end-btn {
         background: #3a2fd3;
         color: white;
-        padding: 15px 40px;
+        padding: 20px 50px;
         font-size: 1.5rem;
-        border-radius: 30px;
+        border-radius: 40px;
         box-shadow: 0 6px 0 #2c1cb7;
-        margin-top: 30px;
-        margin-bottom: 50px;
+        margin-top: 40px; /* Espaço extra antes do botão final */
+        margin-bottom: 20px;
         display: none;
       }
+
       /* --- LISTA DE TAREFAS --- */
       .timeline {
         width: 100%;
@@ -151,7 +154,7 @@
         background: white;
         border-radius: 20px;
         margin-bottom: 20px;
-        padding: 15px;
+        padding: 20px; /* Mais espaço interno */
         display: flex;
         align-items: center;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -161,7 +164,7 @@
 
       .card.active {
         opacity: 1;
-        transform: scale(1.05);
+        transform: scale(1.02); /* Escala um pouco menor para não estourar a tela */
         border-left: 10px solid #4caf50;
         box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
         background-color: #f1f8e9;
@@ -189,9 +192,9 @@
         margin-right: 15px;
         width: 60px;
         text-align: center;
+        flex-shrink: 0;
       }
       
-      /* Adicionado suporte para imagens inseridas via editor */
       .icon-box img { width: 100%; height: auto; }
 
       .details h2 {
@@ -241,22 +244,23 @@
         box-shadow: 0 5px 0 #1976d2;
       }
 
-      /* --- NOVOS ESTILOS PARA O EDITOR --- */
+      /* --- BOTÃO CONFIGURAÇÃO --- */
       #config-btn {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          background: rgba(255,255,255,0.5);
-          border: 2px solid #fff;
-          font-size: 1.5rem;
-          cursor: pointer;
-          z-index: 100; /* Fica acima de tudo */
-          padding: 10px;
-          border-radius: 50%;
-          transition: background 0.3s;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255,255,255,0.5);
+        border: 2px solid #fff;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 100;
+        padding: 10px;
+        border-radius: 50%;
+        transition: background 0.3s;
       }
       #config-btn:hover { background: rgba(255,255,255,1); }
 
+      /* --- EDITOR --- */
       #edit-modal {
         display: none;
         position: fixed;
@@ -269,7 +273,7 @@
         overflow-y: auto;
         padding: 20px;
       }
-      .edit-container { width: 100%; max-width: 600px; }
+      .edit-container { width: 100%; max-width: 600px; margin-bottom: 20px; }
       .edit-row {
         display: flex; gap: 10px; margin-bottom: 10px; align-items: center;
         background: #f0f0f0; padding: 10px; border-radius: 10px;
@@ -286,39 +290,21 @@
 
 
       @keyframes shimmer {
-        0% {
-          transform: translateX(-130%) rotate(30deg);
-        }
-        100% {
-          transform: translateX(130%) rotate(30deg);
-        }
+        0% { transform: translateX(-130%) rotate(30deg); }
+        100% { transform: translateX(130%) rotate(30deg); }
       }
       @keyframes float {
-        0%,
-        100% {
-          transform: translateY(0) rotate(var(--rot));
-        }
-        50% {
-          transform: translateY(-15px) rotate(var(--rot));
-        }
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
       }
-      @keyframes blinker {
-        50% {
-          opacity: 0;
-        }
-      }
+      @keyframes blinker { 50% { opacity: 0; } }
       @keyframes bounce {
-        from {
-          transform: translateY(0);
-        }
-        to {
-          transform: translateY(-10px);
-        }
+        from { transform: translateY(0); }
+        to { transform: translateY(-10px); }
       }
     </style>
   </head>
   <body>
-    <img src="mario.png" class="bg-decor decor-1" alt="Mario" />
     
     <button id="config-btn" onclick="openEditor()">⚙️</button>
 
@@ -332,6 +318,8 @@
     <div class="timeline" id="timeline"></div>
 
     <button id="end-btn" onclick="finishDay()">✅ Encerrar o Dia</button>
+
+    <img src="mario.png" class="bg-decor decor-1" alt="Mario" />
 
     <div id="alarm-modal">
       <div id="alarm-box">
@@ -353,7 +341,7 @@
     </div>
 
     <script>
-      // --- DADOS PADRÃO (Sua lista original) ---
+      // --- DADOS PADRÃO ---
       const defaultSchedule = [
         { time: "06:00", title: "Escovar os dentes", icon: "❤️" },
         { time: "06:30", title: "Comer o pãozinho", icon: "🍞" },
@@ -371,7 +359,7 @@
         { time: "21:00", title: "Dormir", icon: "😴" },
       ];
 
-      // --- CARREGAR DADOS (Tenta pegar da memória, se não tiver, usa o padrão) ---
+      // --- CARREGAR DADOS ---
       let schedule = JSON.parse(localStorage.getItem('rotinaLeonzinho')) || defaultSchedule;
 
       // --- MOSTRAR A DATA DE HOJE ---
@@ -384,11 +372,10 @@
       }
       updateDate();
 
-      // --- FUNÇÕES DE EDIÇÃO (NOVO) ---
+      // --- FUNÇÕES DE EDIÇÃO ---
       function openEditor() {
           const list = document.getElementById('editor-list');
           list.innerHTML = '';
-          // Ordena
           schedule.sort((a, b) => a.time.localeCompare(b.time));
 
           schedule.forEach((item) => {
@@ -433,12 +420,10 @@
           });
 
           newSchedule.sort((a, b) => a.time.localeCompare(b.time));
-          
           schedule = newSchedule;
-          localStorage.setItem('rotinaLeonzinho', JSON.stringify(schedule)); // Salva no navegador
-          
+          localStorage.setItem('rotinaLeonzinho', JSON.stringify(schedule));
           closeEditor();
-          renderSchedule(); // Atualiza a tela se já estiver rodando
+          renderSchedule();
           alert('Rotina salva com sucesso!');
       }
 
@@ -473,7 +458,6 @@
       }
 
       function finishDay() {
-        // Usa o mesmo modal do alarme para dar parabéns
         const modal = document.getElementById("alarm-modal");
         const msg = document.getElementById("alarm-message");
         const btn = document.getElementById("stop-btn");
@@ -491,8 +475,6 @@
       function renderSchedule() {
         const container = document.getElementById("timeline");
         container.innerHTML = "";
-        
-        // Garante ordenação
         schedule.sort((a, b) => a.time.localeCompare(b.time));
 
         schedule.forEach((item, index) => {
@@ -523,7 +505,7 @@
           const taskTime = schedule[i].time;
           const card = document.getElementById(`task-${i}`);
           
-          if (!card) return; // Segurança caso a lista mude
+          if (!card) return; 
 
           card.classList.remove("active", "past");
 
@@ -573,11 +555,10 @@
         osc.connect(gainNode);
         gainNode.connect(audioCtx.destination);
         osc.type = "triangle";
-        // Pequena melodia de vitória
-        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // Dó
-        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2); // Mi
-        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.4); // Sol
-        osc.frequency.setValueAtTime(1046.5, audioCtx.currentTime + 0.6); // Dó agudo
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2);
+        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.4);
+        osc.frequency.setValueAtTime(1046.5, audioCtx.currentTime + 0.6);
 
         gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(
@@ -599,7 +580,7 @@
 
         msg.innerText = `Hora de: ${activityName}!`;
         btn.innerText = "Pronto, já vou!";
-        btn.onclick = stopAlarm; // Garante que volta para a função de parar normal
+        btn.onclick = stopAlarm; 
 
         modal.style.display = "flex";
         playSoftChime();
