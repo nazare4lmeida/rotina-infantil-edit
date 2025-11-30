@@ -220,19 +220,25 @@
       }
       #config-btn:hover { background: rgba(255,255,255,1); }
 
-      /* --- EDITOR (CORRIGIDO SCROLL E BOTÕES) --- */
+      /* --- EDITOR --- */
       #edit-modal {
         display: none;
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(255, 255, 255, 0.98);
         z-index: 3000;
-        /* Scroll Fix: Mudado de center para flex-start + padding */
+        
+        /* CORREÇÃO DO SCROLL EM BAIXO */
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
         overflow-y: auto;
-        padding: 40px 20px; /* Espaço no topo para não cortar */
+        
+        /* Box-sizing garante que o padding não aumente a altura total */
+        box-sizing: border-box; 
+        
+        /* Padding maior em baixo (100px) para os botões não ficarem cortados */
+        padding: 40px 20px 100px 20px;
       }
       .edit-container { width: 100%; max-width: 600px; margin-bottom: 20px; }
       
@@ -241,7 +247,6 @@
         background: #f0f0f0; padding: 10px; border-radius: 10px;
       }
       
-      /* Estilo especial para o input de nome */
       .name-row {
         background: #fff3e0; border: 2px solid #ffb74d;
         margin-bottom: 20px;
@@ -255,12 +260,11 @@
       
       .btn-remove { background: #d32f2f; color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; box-shadow: none; }
       
-      /* Estilos de Botões do Editor */
       .btn-action { margin: 10px; padding: 15px 30px; font-size: 1.2rem; border-radius: 10px; box-shadow: none; width: 200px; }
       .save-btn { background: #4caf50; color: white; }
       .cancel-btn { background: #999; color: white; }
-      .restore-btn { background: #d87198; color: white; }
-      .add-btn { background: #2196f3; color: white; width: 300px; margin-bottom: 20px; margin-top: 0;}
+      .restore-btn { background: #e02ca4; color: white; }
+      .add-btn { background: #1982d8; color: white; width: 300px; margin-bottom: 20px; margin-top: 0;}
 
 
       @keyframes shimmer { 0% { transform: translateX(-130%) rotate(30deg); } 100% { transform: translateX(130%) rotate(30deg); } }
@@ -312,7 +316,7 @@
             <button class="btn-action save-btn" onclick="saveAndClose()">Salvar</button>
             <button class="btn-action cancel-btn" onclick="closeEditor()">Cancelar</button>
         </div>
-        <button class="btn-action restore-btn" onclick="resetFactory()">Restaurar</button>
+        <button class="btn-action restore-btn" onclick="resetFactory()">Restaurar Padrão</button>
     </div>
 
     <script>
@@ -357,7 +361,6 @@
           const list = document.getElementById('editor-list');
           list.innerHTML = '';
           
-          // Preencher campo de nome
           document.getElementById('edit-child-name').value = childName;
 
           schedule.sort((a, b) => a.time.localeCompare(b.time));
