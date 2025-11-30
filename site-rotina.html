@@ -1,340 +1,476 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Minha Rotina Diária</title>
     <style>
-        /* --- ESTILOS GERAIS --- */
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Open+Sans:wght@400;600&display=swap');
+      /* --- ESTILOS GERAIS --- */
+      @import url("https://fonts.googleapis.com/css2?family=Fredoka+One&family=Open+Sans:wght@400;600&display=swap");
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: #e0f7fa; /* Azul clarinho calmo */
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+      body {
+        font-family: "Open Sans", sans-serif;
+        background-color: #e0f7fa;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+        min-height: 100vh;
+        position: relative;
+      }
 
-        h1 {
-            font-family: 'Fredoka One', cursive;
-            color: #d32f2f; /* Vermelho Mario */
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 0px #fff;
-            margin-bottom: 10px;
-            text-align: center;
-        }
+      /* --- DECORAÇÃO DE FUNDO (Imagens Espalhadas) --- */
+      .bg-decor {
+        position: absolute;
+        z-index: 0; /* Fica atrás de tudo */
+        opacity: 0.9; /* Meio transparente para não atrapalhar */
+        width: 200px;
+        animation: shimmer 4s linear infinite;
+      }
 
-        #clock {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #0277bd;
-            background: #fff;
-            padding: 10px 30px;
-            border-radius: 50px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            border: 4px solid #ffca28; /* Amarelo Moeda Mario */
-        }
+      /* Posicionamento das imagens */
+      .decor-1 {
+        bottom: 20px;
+        transform: rotate(15deg);
+        center: 10px;
+        --rot: 5deg;
+        animation: float 6s ease-in-out infinite;
+      }
 
-        /* --- BOTÃO INICIAL (Necessário para o som funcionar no navegador) --- */
-        #start-btn {
-            background: #4caf50;
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            font-size: 1.5rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: 'Fredoka One', cursive;
-            animation: pulse 2s infinite;
-            margin-bottom: 20px;
-        }
+      @media (max-width: 600px) {
+        .bg-decor {
+          width: 100px;
+          opacity: 0.2;
+        } /* Menor no celular */
+      }
 
-        /* --- LISTA DE TAREFAS --- */
-        .timeline {
-            width: 100%;
-            max-width: 800px;
-            display: none; /* Escondido até clicar em Iniciar */
-        }
+      /* --- TÍTULO E DATA --- */
+      h1 {
+        font-family: "Fredoka One", cursive;
+        color: #030a5ad8;
+        font-size: 4rem;
+        text-shadow: 4px 4px 0px #4a9eee;
+        margin-bottom: 40px;
+        text-align: center;
+        padding: 0 5px;
+        margin-top: 20px;
+        z-index: 1;
+      }
 
-        .card {
-            background: white;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, border 0.3s ease;
-            opacity: 0.7; /* Tarefas futuras ficam mais apagadas */
-            border-left: 10px solid #bdbdbd;
-        }
+      #date-display {
+        font-family: "Fredoka One", cursive;
+        color: #034f7a;
+        font-size: 2.5rem;
+        margin-bottom: 40px;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 10px 20px;
+        border-radius: 30px;
+      }
 
-        .card.active {
-            opacity: 1;
-            transform: scale(1.05);
-            border-left: 10px solid #4caf50; /* Verde Luigi */
-            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
-            background-color: #f1f8e9;
-        }
+      /* --- RELÓGIO MOEDA --- */
+      #clock {
+        font-family: "Fredoka One", cursive;
+        font-size: 4rem; /* Ajustado para caber "Play" */
+        color: #795548;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(circle at 30% 30%, #fffde7, #ffc107);
+        border: 12px solid #ffb300;
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.8),
+          0 10px 25px rgba(0, 0, 0, 0.3);
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
 
-        .card.past {
-            opacity: 0.5;
-            background-color: #eeeeee;
-        }
+      #clock::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          to bottom right,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.7) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        animation: shimmer 5s infinite linear;
+      }
 
-        .time-box {
-            background: #ffca28;
-            color: #3e2723;
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-right: 20px;
-            min-width: 80px;
-            text-align: center;
-        }
+      /* --- BOTÕES --- */
+      button {
+        font-family: "Fredoka One", cursive;
+        cursor: pointer;
+        border: none;
+        transition: transform 0.1s;
+        z-index: 1;
+      }
+      button:active {
+        transform: scale(0.95);
+      }
 
-        .icon-box {
-            font-size: 3rem;
-            margin-right: 20px;
-            width: 60px;
-            text-align: center;
-        }
-        
-        /* Se você usar imagens reais, elas se ajustarão aqui */
-        .icon-box img {
-            width: 100%;
-            height: auto;
-        }
+      #start-btn {
+        background: #be0909;
+        color: white;
+        padding: 20px 50px;
+        font-size: 1.8rem;
+        border-radius: 30px;
+        box-shadow: 0 8px 0 #be301e;
+        margin-bottom: 30px;
+      }
 
-        .details {
-            flex-grow: 1;
-        }
+      #end-btn {
+        background: #3a2fd3;
+        color: white;
+        padding: 15px 40px;
+        font-size: 1.5rem;
+        border-radius: 30px;
+        box-shadow: 0 6px 0 #2c1cb7;
+        margin-top: 30px;
+        margin-bottom: 50px;
+        display: none;
+      }
+      /* --- LISTA DE TAREFAS --- */
+      .timeline {
+        width: 100%;
+        max-width: 800px;
+        display: none;
+        z-index: 1;
+      }
 
-        .details h2 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: #333;
-        }
+      .card {
+        background: white;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        opacity: 0.7;
+        border-left: 10px solid #bdbdbd;
+      }
 
-        /* --- ALARME MODAL (Pop-up) --- */
-        #alarm-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
+      .card.active {
+        opacity: 1;
+        transform: scale(1.05);
+        border-left: 10px solid #4caf50;
+        box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        background-color: #f1f8e9;
+      }
 
-        #alarm-box {
-            background: white;
-            padding: 40px;
-            border-radius: 30px;
-            text-align: center;
-            border: 8px solid #ffca28;
-            animation: bounce 0.5s infinite alternate;
-        }
+      .card.past {
+        opacity: 0.5;
+        background-color: #eeeeee;
+      }
 
-        #alarm-message {
-            font-size: 2rem;
-            color: #d32f2f;
-            margin-bottom: 20px;
-            font-family: 'Fredoka One', cursive;
-        }
+      .time-box {
+        background: #ffca28;
+        color: #3e2723;
+        padding: 10px 15px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-right: 15px;
+        min-width: 70px;
+        text-align: center;
+      }
 
-        #stop-btn {
-            background: #2196f3; /* Azul Sonic/Patrulha */
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.5rem;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 5px 0 #1976d2;
-        }
+      .icon-box {
+        font-size: 3rem;
+        margin-right: 15px;
+        width: 60px;
+        text-align: center;
+      }
 
-        #stop-btn:active {
-            transform: translateY(5px);
-            box-shadow: none;
-        }
+      .details h2 {
+        margin: 0;
+        font-size: 1.4rem;
+        color: #333;
+      }
 
-        /* Animações */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-10px); }
-        }
+      /* --- MODAL (Pop-up) --- */
+      #alarm-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
 
+      #alarm-box {
+        background: white;
+        padding: 30px;
+        border-radius: 30px;
+        text-align: center;
+        border: 8px solid #ffca28;
+        animation: bounce 0.5s infinite alternate;
+        max-width: 90%;
+      }
+
+      #alarm-message {
+        font-size: 2rem;
+        color: #d32f2f;
+        margin-bottom: 20px;
+        font-family: "Fredoka One", cursive;
+      }
+
+      #stop-btn {
+        background: #2196f3;
+        color: white;
+        padding: 15px 30px;
+        font-size: 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 0 #1976d2;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-130%) rotate(30deg);
+        }
+        100% {
+          transform: translateX(130%) rotate(30deg);
+        }
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) rotate(var(--rot));
+        }
+        50% {
+          transform: translateY(-15px) rotate(var(--rot));
+        }
+      }
+      @keyframes blinker {
+        50% {
+          opacity: 0;
+        }
+      }
+      @keyframes bounce {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-10px);
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <img src="mario.png" class="bg-decor decor-1" alt="Mario" />
 
-    <h1>Rotina do Campeão 🌟</h1>
-    <div id="clock">00:00</div>
-    
-    <button id="start-btn" onclick="startRoutine()">🎮 Iniciar Painel da Rotina</button>
+    <h1>Rotina do Leonzinho 🌟</h1>
+    <div id="date-display">...</div>
 
-    <div class="timeline" id="timeline">
-        </div>
+    <div id="clock">Play</div>
+
+    <button id="start-btn" onclick="startRoutine()">🎮 Ligar Painel!</button>
+
+    <div class="timeline" id="timeline"></div>
+
+    <button id="end-btn" onclick="finishDay()">✅ Encerrar o Dia</button>
 
     <div id="alarm-modal">
-        <div id="alarm-box">
-            <div style="font-size: 4rem;">⏰🍄⭐</div>
-            <div id="alarm-message">Hora de Mudar!</div>
-            <button id="stop-btn" onclick="stopAlarm()">Pronto, já vou!</button>
-        </div>
+      <div id="alarm-box">
+        <div style="font-size: 4rem">⏰🍄⭐</div>
+        <div id="alarm-message">Hora de Mudar!</div>
+        <button id="stop-btn" onclick="stopAlarm()">Pronto, já vou!</button>
+      </div>
     </div>
 
     <script>
-        // --- CONFIGURAÇÃO DA ROTINA ---
-        // Você pode editar o texto e os ícones aqui!
-        // "time" deve ser no formato HH:MM (24h)
-        // "icon" pode ser um emoji OU um link de imagem (ex: '<img src="mario.png">')
-        const schedule = [
-            { time: "06:00", title: "Escovar os dentes", icon: "🪥" },
-            { time: "06:30", title: "Comer o pãozinho", icon: "🍞" },
-            { time: "07:00", title: "Desenhar no PC", icon: "🎨" },
-            { time: "08:00", title: "Assistir no PC", icon: "🖥️" },
-            { time: "09:30", title: "Pausa pro Lanche", icon: "🍎" },
-            { time: "11:30", title: "Hora do Almoço", icon: "🍛" },
-            { time: "14:00", title: "Hora de Estudar", icon: "📚" },
-            { time: "15:00", title: "Pausa pra Brincar", icon: "🎮" },
-            { time: "16:00", title: "Usar o Computador", icon: "💻" },
-            { time: "18:00", title: "Jantar", icon: "spaghetti" }, // Exemplo de troca depois
-            { time: "19:00", title: "Ler com a Mamãe", icon: "📖" },
-            { time: "19:30", title: "Usar o Computador", icon: "🕹️" },
-            { time: "21:00", title: "Dormir", icon: "😴" }
-        ];
+      // --- CONFIGURAÇÃO (Mantidos os Emojis - você pode trocar pelas imagens se quiser nos ícones também) ---
+      const schedule = [
+        { time: "06:00", title: "Escovar os dentes", icon: "❤️" },
+        { time: "06:30", title: "Comer o pãozinho", icon: "🍞" },
+        { time: "07:00", title: "Desenhar no PC", icon: "🎨" },
+        { time: "08:00", title: "Assistir no PC", icon: "🖥️" },
+        { time: "09:30", title: "Pausa pro Lanche", icon: "🍎" },
+        { time: "11:30", title: "Hora do Almoço", icon: "🍛" },
+        { time: "12:00", title: "Pode usar o computador", icon: "💻" },
+        { time: "14:00", title: "Hora de Estudar", icon: "📚" },
+        { time: "15:00", title: "Pausa pra Brincar", icon: "🎮" },
+        { time: "16:00", title: "Usar o Computador", icon: "💻" },
+        { time: "18:00", title: "Jantar", icon: "🍽️" },
+        { time: "19:00", title: "Ler com a Mamãe", icon: "📖" },
+        { time: "19:30", title: "Usar o Computador", icon: "🕹️" },
+        { time: "21:00", title: "Dormir", icon: "😴" },
+      ];
 
-        // --- LÓGICA DO SISTEMA ---
-        let audioCtx;
-        let isAlarmPlaying = false;
-        let lastTriggeredTime = "";
+      // --- MOSTRAR A DATA DE HOJE ---
+      function updateDate() {
+        const now = new Date();
+        const options = { weekday: "long", day: "numeric", month: "long" };
+        const dateString = now.toLocaleDateString("pt-BR", options);
+        document.getElementById("date-display").innerText =
+          dateString.charAt(0).toUpperCase() + dateString.slice(1);
+      }
+      updateDate();
 
-        function startRoutine() {
-            document.getElementById('start-btn').style.display = 'none';
-            document.getElementById('timeline').style.display = 'block';
-            
-            // Inicializa áudio
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new AudioContext();
-            
-            renderSchedule();
-            updateClock();
-            setInterval(updateClock, 1000); // Atualiza a cada segundo
-        }
+      // --- LÓGICA DO SISTEMA ---
+      let audioCtx;
+      let isAlarmPlaying = false;
+      let lastTriggeredTime = "";
 
-        function renderSchedule() {
-            const container = document.getElementById('timeline');
-            container.innerHTML = "";
-            
-            schedule.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.id = `task-${index}`;
-                div.innerHTML = `
-                    <div class="time-box">${item.time}</div>
-                    <div class="icon-box">${item.icon}</div>
-                    <div class="details">
-                        <h2>${item.title}</h2>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
+      function startRoutine() {
+        document.getElementById("start-btn").style.display = "none";
+        document.getElementById("timeline").style.display = "block";
+        document.getElementById("end-btn").style.display = "block"; 
 
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const currentTime = `${hours}:${minutes}`;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
 
-            document.getElementById('clock').innerText = currentTime;
+        renderSchedule();
+        updateClock();
+        setInterval(updateClock, 1000);
+      }
 
-            // Verifica qual atividade está ativa
-            let activeFound = false;
-            
-            // Loop reverso para achar a atividade atual (a última que já passou do horário)
-            for (let i = schedule.length - 1; i >= 0; i--) {
-                const taskTime = schedule[i].time;
-                const card = document.getElementById(`task-${i}`);
-                
-                // Limpa classes
-                card.classList.remove('active', 'past');
+      function finishDay() {
+        // Usa o mesmo modal do alarme para dar parabéns
+        const modal = document.getElementById("alarm-modal");
+        const msg = document.getElementById("alarm-message");
+        const btn = document.getElementById("stop-btn");
 
-                if (currentTime >= taskTime && !activeFound) {
-                    // Esta é a atividade atual
-                    card.classList.add('active');
-                    activeFound = true;
+        msg.innerText = "Parabéns! Dia Concluído! 🌟😴";
+        btn.innerText = "Até amanhã!";
+        btn.onclick = function () {
+          location.reload();
+        }; 
 
-                    // Disparar Alarme se o horário bate exato e ainda não tocou
-                    if (currentTime === taskTime && lastTriggeredTime !== currentTime) {
-                        triggerAlarm(schedule[i].title);
-                        lastTriggeredTime = currentTime;
-                    }
-                } else if (currentTime > taskTime) {
-                    card.classList.add('past');
-                }
+        modal.style.display = "flex";
+        playVictorySound();
+      }
+
+      function renderSchedule() {
+        const container = document.getElementById("timeline");
+        container.innerHTML = "";
+        schedule.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.className = "card";
+          div.id = `task-${index}`;
+          div.innerHTML = `
+              <div class="time-box">${item.time}</div>
+              <div class="icon-box">${item.icon}</div>
+              <div class="details"><h2>${item.title}</h2></div>
+            `;
+          container.appendChild(div);
+        });
+      }
+
+      function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+
+        const currentTimeHTML = `${hours}<span style="animation: blinker 1s step-start infinite; color:#d32f2f; margin:0 5px;">:</span>${minutes}`;
+        document.getElementById("clock").innerHTML = currentTimeHTML;
+
+        const currentTimeSimple = `${hours}:${minutes}`;
+
+        let activeFound = false;
+        for (let i = schedule.length - 1; i >= 0; i--) {
+          const taskTime = schedule[i].time;
+          const card = document.getElementById(`task-${i}`);
+          card.classList.remove("active", "past");
+
+          if (currentTimeSimple >= taskTime && !activeFound) {
+            card.classList.add("active");
+            activeFound = true;
+            if (
+              currentTimeSimple === taskTime &&
+              lastTriggeredTime !== currentTimeSimple
+            ) {
+              triggerAlarm(schedule[i].title);
+              lastTriggeredTime = currentTimeSimple;
             }
+          } else if (currentTimeSimple > taskTime) {
+            card.classList.add("past");
+          }
         }
+      }
 
-        // --- SISTEMA DE SOM SUAVE (Sintetizador) ---
-        function playSoftChime() {
-            if (!audioCtx) return;
-            
-            // Cria osciladores para um som harmônico (tipo sino/moeda do Mario)
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            // Configuração do som (Sino suave)
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // Dó
-            osc.frequency.exponentialRampToValueAtTime(1046.5, audioCtx.currentTime + 0.1); // Dó Oitava acima
-            
-            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
-            
-            osc.start();
-            osc.stop(audioCtx.currentTime + 1.5);
-        }
+      // --- SOM DE ALARME ---
+      function playSoftChime() {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(
+          1046.5,
+          audioCtx.currentTime + 0.1
+        );
+        gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(
+          0.01,
+          audioCtx.currentTime + 1.5
+        );
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.5);
+      }
 
-        let alarmInterval;
+      // --- SOM DE VITÓRIA (ENCERRAR) ---
+      function playVictorySound() {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        osc.type = "triangle";
+        // Pequena melodia de vitória
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // Dó
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2); // Mi
+        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.4); // Sol
+        osc.frequency.setValueAtTime(1046.5, audioCtx.currentTime + 0.6); // Dó agudo
 
-        function triggerAlarm(activityName) {
-            if (isAlarmPlaying) return;
-            isAlarmPlaying = true;
-            
-            const modal = document.getElementById('alarm-modal');
-            const msg = document.getElementById('alarm-message');
-            
-            msg.innerText = `Hora de: ${activityName}!`;
-            modal.style.display = 'flex';
-            
-            // Toca o som a cada 2 segundos até ele parar
-            playSoftChime();
-            alarmInterval = setInterval(playSoftChime, 2500);
-        }
+        gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(
+          0.01,
+          audioCtx.currentTime + 1.5
+        );
 
-        function stopAlarm() {
-            isAlarmPlaying = false;
-            clearInterval(alarmInterval);
-            document.getElementById('alarm-modal').style.display = 'none';
-        }
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.5);
+      }
+
+      let alarmInterval;
+      function triggerAlarm(activityName) {
+        if (isAlarmPlaying) return;
+        isAlarmPlaying = true;
+        const modal = document.getElementById("alarm-modal");
+        const msg = document.getElementById("alarm-message");
+        const btn = document.getElementById("stop-btn");
+
+        msg.innerText = `Hora de: ${activityName}!`;
+        btn.innerText = "Pronto, já vou!";
+        btn.onclick = stopAlarm; // Garante que volta para a função de parar normal
+
+        modal.style.display = "flex";
+        playSoftChime();
+        alarmInterval = setInterval(playSoftChime, 2500);
+      }
+
+      function stopAlarm() {
+        isAlarmPlaying = false;
+        clearInterval(alarmInterval);
+        document.getElementById("alarm-modal").style.display = "none";
+      }
     </script>
-</body>
+  </body>
 </html>
