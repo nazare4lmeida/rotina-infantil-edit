@@ -190,6 +190,9 @@
         width: 60px;
         text-align: center;
       }
+      
+      /* Adicionado suporte para imagens inseridas via editor */
+      .icon-box img { width: 100%; height: auto; }
 
       .details h2 {
         margin: 0;
@@ -238,6 +241,50 @@
         box-shadow: 0 5px 0 #1976d2;
       }
 
+      /* --- NOVOS ESTILOS PARA O EDITOR --- */
+      #config-btn {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: rgba(255,255,255,0.5);
+          border: 2px solid #fff;
+          font-size: 1.5rem;
+          cursor: pointer;
+          z-index: 100; /* Fica acima de tudo */
+          padding: 10px;
+          border-radius: 50%;
+          transition: background 0.3s;
+      }
+      #config-btn:hover { background: rgba(255,255,255,1); }
+
+      #edit-modal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        z-index: 3000;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        overflow-y: auto;
+        padding: 20px;
+      }
+      .edit-container { width: 100%; max-width: 600px; }
+      .edit-row {
+        display: flex; gap: 10px; margin-bottom: 10px; align-items: center;
+        background: #f0f0f0; padding: 10px; border-radius: 10px;
+      }
+      .edit-row input { padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem; }
+      .edit-time { width: 100px; }
+      .edit-icon { width: 60px; }
+      .edit-title { flex-grow: 1; }
+      .btn-remove { background: #d32f2f; color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; box-shadow: none; }
+      .btn-action { margin: 10px; padding: 15px 30px; font-size: 1.2rem; border-radius: 10px; box-shadow: none; }
+      .save-btn { background: #4caf50; color: white; }
+      .cancel-btn { background: #999; color: white; }
+      .add-btn { background: #2196f3; color: white; width: 100%; margin-bottom: 20px;}
+
+
       @keyframes shimmer {
         0% {
           transform: translateX(-130%) rotate(30deg);
@@ -272,6 +319,8 @@
   </head>
   <body>
     <img src="mario.png" class="bg-decor decor-1" alt="Mario" />
+    
+    <button id="config-btn" onclick="openEditor()">⚙️</button>
 
     <h1>Rotina do Leonzinho 🌟</h1>
     <div id="date-display">...</div>
@@ -292,9 +341,20 @@
       </div>
     </div>
 
+    <div id="edit-modal">
+        <h2 style="color: #333; font-family:'Fredoka One'">Editar Tarefas</h2>
+        <div class="edit-container" id="editor-list"></div>
+        <button class="btn-action add-btn" onclick="addNewTaskInput()">+ Adicionar Tarefa</button>
+        <div>
+            <button class="btn-action save-btn" onclick="saveAndClose()">Salvar</button>
+            <button class="btn-action cancel-btn" onclick="closeEditor()">Cancelar</button>
+        </div>
+        <button onclick="resetFactory()" style="margin-top:20px; background:none; color:red; font-size:0.8rem;">Restaurar Padrão</button>
+    </div>
+
     <script>
-      // --- CONFIGURAÇÃO (Mantidos os Emojis - você pode trocar pelas imagens se quiser nos ícones também) ---
-      const schedule = [
+      // --- DADOS PADRÃO (Sua lista original) ---
+      const defaultSchedule = [
         { time: "06:00", title: "Escovar os dentes", icon: "❤️" },
         { time: "06:30", title: "Comer o pãozinho", icon: "🍞" },
         { time: "07:00", title: "Desenhar no PC", icon: "🎨" },
@@ -311,6 +371,9 @@
         { time: "21:00", title: "Dormir", icon: "😴" },
       ];
 
+      // --- CARREGAR DADOS (Tenta pegar da memória, se não tiver, usa o padrão) ---
+      let schedule = JSON.parse(localStorage.getItem('rotinaLeonzinho')) || defaultSchedule;
+
       // --- MOSTRAR A DATA DE HOJE ---
       function updateDate() {
         const now = new Date();
@@ -320,6 +383,76 @@
           dateString.charAt(0).toUpperCase() + dateString.slice(1);
       }
       updateDate();
+
+      // --- FUNÇÕES DE EDIÇÃO (NOVO) ---
+      function openEditor() {
+          const list = document.getElementById('editor-list');
+          list.innerHTML = '';
+          // Ordena
+          schedule.sort((a, b) => a.time.localeCompare(b.time));
+
+          schedule.forEach((item) => {
+              const row = document.createElement('div');
+              row.className = 'edit-row';
+              row.innerHTML = `
+                <input type="time" class="edit-time" value="${item.time}">
+                <input type="text" class="edit-icon" value='${item.icon}' placeholder="Emoji">
+                <input type="text" class="edit-title" value="${item.title}" placeholder="Atividade">
+                <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+              `;
+              list.appendChild(row);
+          });
+          document.getElementById('edit-modal').style.display = 'flex';
+      }
+
+      function addNewTaskInput() {
+          const list = document.getElementById('editor-list');
+          const row = document.createElement('div');
+          row.className = 'edit-row';
+          row.innerHTML = `
+            <input type="time" class="edit-time" value="00:00">
+            <input type="text" class="edit-icon" value="⭐" placeholder="Emoji">
+            <input type="text" class="edit-title" placeholder="Nova Atividade">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+          `;
+          list.appendChild(row);
+      }
+
+      function saveAndClose() {
+          const rows = document.querySelectorAll('.edit-row');
+          const newSchedule = [];
+
+          rows.forEach(row => {
+              const time = row.querySelector('.edit-time').value;
+              const icon = row.querySelector('.edit-icon').value;
+              const title = row.querySelector('.edit-title').value;
+              
+              if(time && title) {
+                  newSchedule.push({ time, icon, title });
+              }
+          });
+
+          newSchedule.sort((a, b) => a.time.localeCompare(b.time));
+          
+          schedule = newSchedule;
+          localStorage.setItem('rotinaLeonzinho', JSON.stringify(schedule)); // Salva no navegador
+          
+          closeEditor();
+          renderSchedule(); // Atualiza a tela se já estiver rodando
+          alert('Rotina salva com sucesso!');
+      }
+
+      function closeEditor() {
+          document.getElementById('edit-modal').style.display = 'none';
+      }
+
+      function resetFactory() {
+          if(confirm('Tem certeza? Isso vai voltar para a rotina original do Leonzinho.')) {
+              localStorage.removeItem('rotinaLeonzinho');
+              schedule = JSON.parse(JSON.stringify(defaultSchedule));
+              location.reload();
+          }
+      }
 
       // --- LÓGICA DO SISTEMA ---
       let audioCtx;
@@ -358,6 +491,10 @@
       function renderSchedule() {
         const container = document.getElementById("timeline");
         container.innerHTML = "";
+        
+        // Garante ordenação
+        schedule.sort((a, b) => a.time.localeCompare(b.time));
+
         schedule.forEach((item, index) => {
           const div = document.createElement("div");
           div.className = "card";
@@ -385,6 +522,9 @@
         for (let i = schedule.length - 1; i >= 0; i--) {
           const taskTime = schedule[i].time;
           const card = document.getElementById(`task-${i}`);
+          
+          if (!card) return; // Segurança caso a lista mude
+
           card.classList.remove("active", "past");
 
           if (currentTimeSimple >= taskTime && !activeFound) {
