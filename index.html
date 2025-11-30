@@ -12,7 +12,6 @@
         font-family: "Open Sans", sans-serif;
         background-color: #e0f7fa;
         margin: 0;
-        /* Aumentei o espaço em baixo para o scroll ficar confortável */
         padding: 40px 20px 60px 20px;
         display: flex;
         flex-direction: column;
@@ -22,35 +21,31 @@
         position: relative;
       }
 
-      /* --- DECORAÇÃO DE FUNDO (AGORA NO FLUXO DA PÁGINA) --- */
+      /* --- DECORAÇÃO DE FUNDO --- */
       .bg-decor {
-        /* MUDANÇA PRINCIPAL: De absolute para relative */
         position: relative; 
         z-index: 0;
-        opacity: 1; /* Deixei totalmente visível já que não vai sobrepor texto */
-        width: 250px; /* Aumentei um pouquinho para ficar bonito no final */
-        margin-top: 50px; /* Espaço entre o botão e o Mario */
+        opacity: 1;
+        width: 250px;
+        margin-top: 50px;
         animation: shimmer 4s linear infinite;
         display: block;
       }
 
       .decor-1 {
-        /* Removemos 'bottom' e 'center' pois agora ele segue a ordem da página */
-        transform: rotate(0deg); /* Deixei mais reto para ficar bonito no rodapé */
+        transform: rotate(0deg);
         animation: float 6s ease-in-out infinite;
       }
 
       @media (max-width: 600px) {
-        .bg-decor {
-          width: 180px;
-        }
+        .bg-decor { width: 180px; }
       }
 
       /* --- TÍTULO E DATA --- */
       h1 {
         font-family: "Fredoka One", cursive;
         color: #030a5ad8;
-        font-size: 3.5rem; /* Ajustei levemente para não quebrar em telas pequenas */
+        font-size: 3.5rem;
         text-shadow: 4px 4px 0px #4a9eee;
         margin-bottom: 30px;
         text-align: center;
@@ -63,7 +58,7 @@
         font-family: "Fredoka One", cursive;
         color: #034f7a;
         font-size: 2rem;
-        margin-bottom: 50px; /* Mais espaço antes do relógio */
+        margin-bottom: 50px;
         background: rgba(255, 255, 255, 0.8);
         padding: 10px 30px;
         border-radius: 30px;
@@ -89,16 +84,13 @@
         position: relative;
         overflow: hidden;
         z-index: 1;
-        flex-shrink: 0; /* Garante que o relógio não amasse */
+        flex-shrink: 0;
       }
 
       #clock::after {
         content: "";
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
+        top: -50%; left: -50%; width: 200%; height: 200%;
         background: linear-gradient(
           to bottom right,
           rgba(255, 255, 255, 0) 0%,
@@ -116,9 +108,7 @@
         transition: transform 0.1s;
         z-index: 1;
       }
-      button:active {
-        transform: scale(0.95);
-      }
+      button:active { transform: scale(0.95); }
 
       #start-btn {
         background: #be0909;
@@ -137,24 +127,19 @@
         font-size: 1.5rem;
         border-radius: 40px;
         box-shadow: 0 6px 0 #2c1cb7;
-        margin-top: 40px; /* Espaço extra antes do botão final */
+        margin-top: 40px;
         margin-bottom: 20px;
         display: none;
       }
 
       /* --- LISTA DE TAREFAS --- */
-      .timeline {
-        width: 100%;
-        max-width: 800px;
-        display: none;
-        z-index: 1;
-      }
+      .timeline { width: 100%; max-width: 800px; display: none; z-index: 1; }
 
       .card {
         background: white;
         border-radius: 20px;
         margin-bottom: 20px;
-        padding: 20px; /* Mais espaço interno */
+        padding: 20px;
         display: flex;
         align-items: center;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -164,16 +149,13 @@
 
       .card.active {
         opacity: 1;
-        transform: scale(1.02); /* Escala um pouco menor para não estourar a tela */
+        transform: scale(1.02);
         border-left: 10px solid #4caf50;
         box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
         background-color: #f1f8e9;
       }
 
-      .card.past {
-        opacity: 0.5;
-        background-color: #eeeeee;
-      }
+      .card.past { opacity: 0.5; background-color: #eeeeee; }
 
       .time-box {
         background: #ffca28;
@@ -188,29 +170,16 @@
       }
 
       .icon-box {
-        font-size: 3rem;
-        margin-right: 15px;
-        width: 60px;
-        text-align: center;
-        flex-shrink: 0;
+        font-size: 3rem; margin-right: 15px; width: 60px; text-align: center; flex-shrink: 0;
       }
-      
       .icon-box img { width: 100%; height: auto; }
-
-      .details h2 {
-        margin: 0;
-        font-size: 1.4rem;
-        color: #333;
-      }
+      .details h2 { margin: 0; font-size: 1.4rem; color: #333; }
 
       /* --- MODAL (Pop-up) --- */
       #alarm-modal {
         display: none;
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0, 0, 0, 0.9);
         z-index: 2000;
         justify-content: center;
@@ -229,26 +198,17 @@
       }
 
       #alarm-message {
-        font-size: 2rem;
-        color: #d32f2f;
-        margin-bottom: 20px;
-        font-family: "Fredoka One", cursive;
+        font-size: 2rem; color: #d32f2f; margin-bottom: 20px; font-family: "Fredoka One", cursive;
       }
 
       #stop-btn {
-        background: #2196f3;
-        color: white;
-        padding: 15px 30px;
-        font-size: 1.5rem;
-        border-radius: 15px;
-        box-shadow: 0 5px 0 #1976d2;
+        background: #2196f3; color: white; padding: 15px 30px; font-size: 1.5rem; border-radius: 15px; box-shadow: 0 5px 0 #1976d2;
       }
 
       /* --- BOTÃO CONFIGURAÇÃO --- */
       #config-btn {
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 20px; right: 20px;
         background: rgba(255,255,255,0.5);
         border: 2px solid #fff;
         font-size: 1.5rem;
@@ -260,55 +220,60 @@
       }
       #config-btn:hover { background: rgba(255,255,255,1); }
 
-      /* --- EDITOR --- */
+      /* --- EDITOR (CORRIGIDO SCROLL E BOTÕES) --- */
       #edit-modal {
         display: none;
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(255, 255, 255, 0.98);
         z-index: 3000;
-        justify-content: center;
+        /* Scroll Fix: Mudado de center para flex-start + padding */
+        justify-content: flex-start;
         align-items: center;
         flex-direction: column;
         overflow-y: auto;
-        padding: 20px;
+        padding: 40px 20px; /* Espaço no topo para não cortar */
       }
       .edit-container { width: 100%; max-width: 600px; margin-bottom: 20px; }
+      
       .edit-row {
         display: flex; gap: 10px; margin-bottom: 10px; align-items: center;
         background: #f0f0f0; padding: 10px; border-radius: 10px;
       }
+      
+      /* Estilo especial para o input de nome */
+      .name-row {
+        background: #fff3e0; border: 2px solid #ffb74d;
+        margin-bottom: 20px;
+      }
+      .name-row label { font-weight: bold; color: #f57c00; margin-right: 10px;}
+
       .edit-row input { padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem; }
       .edit-time { width: 100px; }
       .edit-icon { width: 60px; }
       .edit-title { flex-grow: 1; }
+      
       .btn-remove { background: #d32f2f; color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; box-shadow: none; }
-      .btn-action { margin: 10px; padding: 15px 30px; font-size: 1.2rem; border-radius: 10px; box-shadow: none; }
+      
+      /* Estilos de Botões do Editor */
+      .btn-action { margin: 10px; padding: 15px 30px; font-size: 1.2rem; border-radius: 10px; box-shadow: none; width: 200px; }
       .save-btn { background: #4caf50; color: white; }
       .cancel-btn { background: #999; color: white; }
-      .add-btn { background: #2196f3; color: white; width: 100%; margin-bottom: 20px;}
+      .restore-btn { background: #d87198; color: white; }
+      .add-btn { background: #2196f3; color: white; width: 300px; margin-bottom: 20px; margin-top: 0;}
 
 
-      @keyframes shimmer {
-        0% { transform: translateX(-130%) rotate(30deg); }
-        100% { transform: translateX(130%) rotate(30deg); }
-      }
-      @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-15px); }
-      }
+      @keyframes shimmer { 0% { transform: translateX(-130%) rotate(30deg); } 100% { transform: translateX(130%) rotate(30deg); } }
+      @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
       @keyframes blinker { 50% { opacity: 0; } }
-      @keyframes bounce {
-        from { transform: translateY(0); }
-        to { transform: translateY(-10px); }
-      }
+      @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
     </style>
   </head>
   <body>
     
     <button id="config-btn" onclick="openEditor()">⚙️</button>
 
-    <h1>Rotina do Leonzinho 🌟</h1>
+    <h1 id="app-title">Rotina do Leonzinho 🌟</h1>
     <div id="date-display">...</div>
 
     <div id="clock">Play</div>
@@ -330,18 +295,29 @@
     </div>
 
     <div id="edit-modal">
-        <h2 style="color: #333; font-family:'Fredoka One'">Editar Tarefas</h2>
+        <h2 style="color: #333; font-family:'Fredoka One'; margin-bottom: 30px;">Configurações</h2>
+        
+        <div class="edit-container">
+            <div class="edit-row name-row">
+                <label>Nome:</label>
+                <input type="text" id="edit-child-name" class="edit-title" placeholder="Ex: Leonzinho">
+            </div>
+        </div>
+
         <div class="edit-container" id="editor-list"></div>
+        
         <button class="btn-action add-btn" onclick="addNewTaskInput()">+ Adicionar Tarefa</button>
+        
         <div>
             <button class="btn-action save-btn" onclick="saveAndClose()">Salvar</button>
             <button class="btn-action cancel-btn" onclick="closeEditor()">Cancelar</button>
         </div>
-        <button onclick="resetFactory()" style="margin-top:20px; background:none; color:red; font-size:0.8rem;">Restaurar Padrão</button>
+        <button class="btn-action restore-btn" onclick="resetFactory()">Restaurar</button>
     </div>
 
     <script>
       // --- DADOS PADRÃO ---
+      const defaultName = "Leonzinho";
       const defaultSchedule = [
         { time: "06:00", title: "Escovar os dentes", icon: "❤️" },
         { time: "06:30", title: "Comer o pãozinho", icon: "🍞" },
@@ -360,7 +336,11 @@
       ];
 
       // --- CARREGAR DADOS ---
-      let schedule = JSON.parse(localStorage.getItem('rotinaLeonzinho')) || defaultSchedule;
+      let schedule = JSON.parse(localStorage.getItem('rotinaData')) || defaultSchedule;
+      let childName = localStorage.getItem('childName') || defaultName;
+
+      // Aplicar Nome ao Carregar
+      document.getElementById('app-title').innerText = `Rotina do ${childName} 🌟`;
 
       // --- MOSTRAR A DATA DE HOJE ---
       function updateDate() {
@@ -376,6 +356,10 @@
       function openEditor() {
           const list = document.getElementById('editor-list');
           list.innerHTML = '';
+          
+          // Preencher campo de nome
+          document.getElementById('edit-child-name').value = childName;
+
           schedule.sort((a, b) => a.time.localeCompare(b.time));
 
           schedule.forEach((item) => {
@@ -406,7 +390,16 @@
       }
 
       function saveAndClose() {
-          const rows = document.querySelectorAll('.edit-row');
+          // Salvar Nome
+          const nameInput = document.getElementById('edit-child-name').value;
+          if(nameInput.trim() !== "") {
+              childName = nameInput;
+              localStorage.setItem('childName', childName);
+              document.getElementById('app-title').innerText = `Rotina do ${childName} 🌟`;
+          }
+
+          // Salvar Tarefas
+          const rows = document.querySelectorAll('#editor-list .edit-row');
           const newSchedule = [];
 
           rows.forEach(row => {
@@ -421,10 +414,10 @@
 
           newSchedule.sort((a, b) => a.time.localeCompare(b.time));
           schedule = newSchedule;
-          localStorage.setItem('rotinaLeonzinho', JSON.stringify(schedule));
+          localStorage.setItem('rotinaData', JSON.stringify(schedule));
           closeEditor();
           renderSchedule();
-          alert('Rotina salva com sucesso!');
+          alert('Configurações salvas!');
       }
 
       function closeEditor() {
@@ -432,9 +425,11 @@
       }
 
       function resetFactory() {
-          if(confirm('Tem certeza? Isso vai voltar para a rotina original do Leonzinho.')) {
-              localStorage.removeItem('rotinaLeonzinho');
+          if(confirm('Tem certeza? Isso vai apagar todas as personalizações e voltar ao padrão.')) {
+              localStorage.removeItem('rotinaData');
+              localStorage.removeItem('childName');
               schedule = JSON.parse(JSON.stringify(defaultSchedule));
+              childName = defaultName;
               location.reload();
           }
       }
